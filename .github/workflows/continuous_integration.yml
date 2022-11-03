@@ -13,11 +13,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        terraform_version: ["1.3.3"]
+        terraform_version: ["1.3.4"]
         include:
-          - terraform_version: "1.3.3"
+          - terraform_version: "1.3.4"
             terragrunt_version: "v0.39.2"
-            awscli_version: "2.8.4"
+            awscli_version: "2.8.8"
     env:
       DOCKER_BUILDKIT: 1
       TERRAFORM_VERSION: ${{ matrix.terraform_version }}

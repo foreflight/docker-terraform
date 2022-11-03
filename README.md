@@ -14,7 +14,7 @@ Via Docker Compose, which includes volumes for basic functionality:
 ```yml
 services:
   terraform:
-    image: ghcr.io/foreflight/terraform:1.3.3
+    image: ghcr.io/foreflight/terraform:1.3.4
     volumes:
       - ./:/usr/local/src
       - $HOME/.aws:/root/.aws:ro
@@ -27,7 +27,7 @@ services:
 ```console
 $ docker-compose run --rm terraform
 root@43896c479d95:/usr/local/src# terraform --version
-Terraform v1.3.3
+Terraform v1.3.4
 on linux_arm64
 ```
 
@@ -60,5 +60,5 @@ root@59531b150efd:/usr/local/src# aws sts get-caller-identity
 An example of how to use `cibuild` to build and test an image:
 
 ```console
-$ CI=1 TERRAFORM_VERSION=1.3.3 TERRAGRUNT_VERSION=v0.39.2 AWSCLI_VERSION=2.8.4 ./scripts/cibuild
+$ CI=1 TERRAFORM_VERSION=1.3.4 TERRAGRUNT_VERSION=v0.39.2 AWSCLI_VERSION=2.8.8 ./scripts/cibuild
 ```
