@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${CI}" ]]; then
+    set -x
+fi
+
+set -u
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Publish container images built from templates.
+"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    if [[ "${1:-}" == "--help" ]]; then
+        usage
+    else
+        echo "${CR_PASSWORD}" | docker login -u "${CR_USER}" --password-stdin ghcr.io
+
+        docker \
+            push "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}"
+    fi
+fi
