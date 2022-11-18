@@ -15,11 +15,13 @@ Via Docker Compose, which includes volumes for basic functionality:
 services:
   terraform:
     image: ghcr.io/foreflight/terraform:1.3.5
+    environment:
+      - AWS_PROFILE
+      - TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
     volumes:
       - ./:/usr/local/src
       - $HOME/.aws:/root/.aws:ro
-    environment:
-      - AWS_PROFILE
+      - $HOME/.terraform.d/plugin-cache:/root/.terraform.d/plugin-cache
     working_dir: /usr/local/src
     entrypoint: bash
 ```
