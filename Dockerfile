@@ -1,11 +1,11 @@
-ARG debian_version=bookworm-slim
+ARG alpine_version=3.22
 
 # We install each tool (e.g., Terraform, Terragrunt, and the AWS CLI) in a
 # separate build stage. This design allows us to install each tool in parallel
 # while preventing a change to one layer from blowing away the cache of
 # subsequent layers.
 # https://docs.docker.com/build/building/multi-stage/
-FROM debian:${debian_version} AS terraform-builder
+FROM alpine:${alpine_version} AS terraform-builder
 
 # These args support multi-platform builds if we decide to produce a linux/arm64
 # variant.
@@ -15,62 +15,45 @@ ARG TARGETOS
 ARG TARGETARCH
 
 RUN set -ex \
-    && apt-get update && apt-get install -y ca-certificates curl unzip --no-install-recommends \
+    && apk add curl unzip \
     && curl "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TARGETOS}_${TARGETARCH}.zip" -o "terraform.zip" \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/
 
-FROM debian:${debian_version} AS terragrunt-builder
+FROM alpine:${alpine_version} AS terragrunt-builder
 
 ARG TERRAGRUNT_VERSION
 ARG TARGETOS
 ARG TARGETARCH
 
 RUN set -ex \
-    && apt-get update && apt-get install -y ca-certificates curl --no-install-recommends \
+    && apk add curl \
     && curl -L "https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_${TARGETOS}_${TARGETARCH}" -o "terragrunt" \
     && chmod +x terragrunt \
     && mv terragrunt /usr/local/bin/
 
-FROM debian:${debian_version} AS awscli2-builder
+FROM alpine:${alpine_version}
 
 ARG AWSCLI_VERSION
-ARG TARGETOS
-ARG TARGETARCH
-
-RUN set -ex \
-    && apt-get update && apt-get install -y ca-certificates curl unzip --no-install-recommends \
-    && curl "https://awscli.amazonaws.com/awscli-exe-${TARGETOS}-$(echo $TARGETARCH | sed s/amd64/x86_64/ | sed s/arm64/aarch64/)-${AWSCLI_VERSION}.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
-    # The --bin-dir is specified so that we can copy the entire bin directory
-    # from the installer stage into into /usr/local/bin of the final stage
-    # without accidentally copying over any other executables that may be
-    # present in /usr/local/bin of the installer stage.
-    && ./aws/install --bin-dir /aws-cli-bin/
-
-FROM debian:${debian_version}
-
 ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
 
 RUN set -ex \
     && deps=" \
         ca-certificates \
-        groff-base \
         less \
         git \
         openssh-client \
+        bash \
+        aws-cli \
         jq \
     " \
-    && apt-get update && apt-get install -y $deps --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
+    && apk add $deps \
+    && rm -rf /var/cache/apk/* \
     && mkdir -p $TF_PLUGIN_CACHE_DIR
 
 # Install Terraform.
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
 # Install Terragrunt.
 COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
-# Install the AWS CLI version 2.
-COPY --from=awscli2-builder /usr/local/aws-cli/ /usr/local/aws-cli/
-COPY --from=awscli2-builder /aws-cli-bin/ /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/terraform"]

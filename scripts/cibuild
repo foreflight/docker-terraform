@@ -25,7 +25,6 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
         docker build \
             --build-arg TERRAFORM_VERSION=${TERRAFORM_VERSION} \
             --build-arg TERRAGRUNT_VERSION=${TERRAGRUNT_VERSION} \
-            --build-arg AWSCLI_VERSION=${AWSCLI_VERSION} \
             --platform "linux/amd64" \
             --tag "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" .
 

@@ -16,12 +16,10 @@ jobs:
         terraform_version: ["1.12.2", "1.10.5"]
         include:
           - terragrunt_version: "v0.83.2"
-            awscli_version: "2.27.5"
     env:
       DOCKER_BUILDKIT: 1
       TERRAFORM_VERSION: ${{ matrix.terraform_version }}
       TERRAGRUNT_VERSION: ${{ matrix.terragrunt_version }}
-      AWSCLI_VERSION: ${{ matrix.awscli_version }}
     steps:
       - uses: actions/checkout@v3
 
