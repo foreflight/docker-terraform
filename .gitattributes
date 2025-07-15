@@ -1,1 +1,8 @@
+# Required when using Windows and Linux together
+# Otherwise Linux git will think all files are modified
+* text=auto eol=crlf
+
+# Required for running shell scripts in the container
+scripts/* eol=lf
+
 Dockerfile.template linguist-language=Dockerfile
