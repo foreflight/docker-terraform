@@ -51,6 +51,8 @@ RUN set -ex \
 
 FROM debian:bookworm-slim
 
+ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
+
 RUN set -ex \
     && deps=" \
         ca-certificates \
@@ -61,7 +63,8 @@ RUN set -ex \
         jq \
     " \
     && apt-get update && apt-get install -y $deps --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p $TF_PLUGIN_CACHE_DIR
 
 # Install Terraform.
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
@@ -70,7 +73,5 @@ COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragru
 # Install the AWS CLI version 2.
 COPY --from=awscli2-builder /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=awscli2-builder /aws-cli-bin/ /usr/local/bin/
-
-ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
 
 ENTRYPOINT ["/usr/local/bin/terraform"]
