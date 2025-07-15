@@ -40,7 +40,7 @@ ARG TARGETARCH
 
 RUN set -ex \
     && apt-get update && apt-get install -y ca-certificates curl unzip --no-install-recommends \
-    && curl "https://awscli.amazonaws.com/awscli-exe-${TARGETOS}-$(echo $TARGETARCH | sed s/amd64/x86_64/)-${AWSCLI_VERSION}.zip" -o "awscliv2.zip" \
+    && curl "https://awscli.amazonaws.com/awscli-exe-${TARGETOS}-$(echo $TARGETARCH | sed s/amd64/x86_64/ | sed s/arm64/aarch64/)-${AWSCLI_VERSION}.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     # The --bin-dir is specified so that we can copy the entire bin directory
     # from the installer stage into into /usr/local/bin of the final stage
