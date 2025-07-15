@@ -71,4 +71,6 @@ COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragru
 COPY --from=awscli2-builder /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=awscli2-builder /aws-cli-bin/ /usr/local/bin/
 
+ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
+
 ENTRYPOINT ["/usr/local/bin/terraform"]
