@@ -32,6 +32,18 @@ RUN set -ex \
     && chmod +x terragrunt \
     && mv terragrunt /usr/local/bin/
 
+FROM alpine:${alpine_version} AS tflint-builder
+
+ARG TFLINT_VERSION
+ARG TARGETOS
+ARG TARGETARCH
+
+RUN set -ex \
+    && apk add curl unzip \
+    && curl -L "https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_${TARGETOS}_${TARGETARCH}.zip" -o "tflint.zip" \
+    && unzip tflint.zip\
+    && mv tflint /usr/local/bin/
+
 FROM alpine:${alpine_version}
 
 ARG AWSCLI_VERSION
@@ -55,5 +67,7 @@ RUN set -ex \
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
 # Install Terragrunt.
 COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
+#Install TFLint
+COPY --from=tflint-builder /usr/local/bin/tflint /usr/local/bin/tflint
 
 ENTRYPOINT ["/usr/local/bin/terraform"]

@@ -45,5 +45,5 @@ on linux_amd64
 An example of how to use `cibuild` to build and test an image:
 
 ```console
-$ CI=1 TERRAFORM_VERSION=1.12.2 TERRAGRUNT_VERSION=v0.83.2 AWSCLI_VERSION=2.27.5 ./scripts/cibuild
+$ CI=1 TERRAFORM_VERSION=1.12.2 TERRAGRUNT_VERSION=v0.83.2 TFLINT_VERSION=v0.58.1 ./scripts/cibuild
 ```

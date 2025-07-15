@@ -25,6 +25,10 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 
         docker \
             run --rm --entrypoint \
+            tflint "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" --version
+
+        docker \
+            run --rm --entrypoint \
             terragrunt "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" --version
 
         docker \
