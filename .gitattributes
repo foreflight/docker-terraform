@@ -4,5 +4,3 @@
 
 # Required for running shell scripts in the container
 scripts/* eol=lf
-
-Dockerfile.template linguist-language=Dockerfile

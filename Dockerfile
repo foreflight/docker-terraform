@@ -1,17 +1,18 @@
+ARG debian_version=bookworm-slim
+
 # We install each tool (e.g., Terraform, Terragrunt, and the AWS CLI) in a
 # separate build stage. This design allows us to install each tool in parallel
 # while preventing a change to one layer from blowing away the cache of
 # subsequent layers.
 # https://docs.docker.com/build/building/multi-stage/
-FROM debian:bookworm-slim AS terraform-builder
+FROM debian:${debian_version} AS terraform-builder
 
 # These args support multi-platform builds if we decide to produce a linux/arm64
 # variant.
 # https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/#93cb
+ARG TERRAFORM_VERSION
 ARG TARGETOS
 ARG TARGETARCH
-
-ENV TERRAFORM_VERSION="%%TERRAFORM_VERSION%%"
 
 RUN set -ex \
     && apt-get update && apt-get install -y ca-certificates curl unzip --no-install-recommends \
@@ -19,12 +20,11 @@ RUN set -ex \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/
 
-FROM debian:bookworm-slim AS terragrunt-builder
+FROM debian:${debian_version} AS terragrunt-builder
 
+ARG TERRAGRUNT_VERSION
 ARG TARGETOS
 ARG TARGETARCH
-
-ENV TERRAGRUNT_VERSION="%%TERRAGRUNT_VERSION%%"
 
 RUN set -ex \
     && apt-get update && apt-get install -y ca-certificates curl --no-install-recommends \
@@ -32,12 +32,11 @@ RUN set -ex \
     && chmod +x terragrunt \
     && mv terragrunt /usr/local/bin/
 
-FROM debian:bookworm-slim AS awscli2-builder
+FROM debian:${debian_version} AS awscli2-builder
 
+ARG AWSCLI_VERSION
 ARG TARGETOS
 ARG TARGETARCH
-
-ENV AWSCLI_VERSION="%%AWSCLI_VERSION%%"
 
 RUN set -ex \
     && apt-get update && apt-get install -y ca-certificates curl unzip --no-install-recommends \
@@ -49,7 +48,7 @@ RUN set -ex \
     # present in /usr/local/bin of the installer stage.
     && ./aws/install --bin-dir /aws-cli-bin/
 
-FROM debian:bookworm-slim
+FROM debian:${debian_version}
 
 ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
 
