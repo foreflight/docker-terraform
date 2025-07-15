@@ -3,7 +3,7 @@
 # while preventing a change to one layer from blowing away the cache of
 # subsequent layers.
 # https://docs.docker.com/build/building/multi-stage/
-FROM debian:bullseye-slim AS terraform-builder
+FROM debian:bookworm-slim AS terraform-builder
 
 # These args support multi-platform builds if we decide to produce a linux/arm64
 # variant.
@@ -19,7 +19,7 @@ RUN set -ex \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/
 
-FROM debian:bullseye-slim AS terragrunt-builder
+FROM debian:bookworm-slim AS terragrunt-builder
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -32,7 +32,7 @@ RUN set -ex \
     && chmod +x terragrunt \
     && mv terragrunt /usr/local/bin/
 
-FROM debian:bullseye-slim AS awscli2-builder
+FROM debian:bookworm-slim AS awscli2-builder
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -49,7 +49,7 @@ RUN set -ex \
     # present in /usr/local/bin of the installer stage.
     && ./aws/install --bin-dir /aws-cli-bin/
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN set -ex \
     && deps=" \
