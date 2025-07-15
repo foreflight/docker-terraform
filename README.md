@@ -13,20 +13,24 @@ Via Docker Compose, which includes volumes for basic functionality:
 ```yml
 services:
   terraform:
-    image: ghcr.io/foreflight/terraform:1.3.5
+    image: ghcr.io/foreflight/terraform:1.12.2
     volumes:
-      - ./:/usr/local/src
-      - $HOME/.aws:/root/.aws:ro
+      - .:/workspace
+      - ~/.aws:/root/.aws:ro
+      - ~/.terraform.d/plugin-cache:/tmp/terraform
     environment:
+      - AWS_REGION
       - AWS_PROFILE
-    working_dir: /usr/local/src
+      - TF_LOG
+    tty: true
+    working_dir: /workspace
     entrypoint: bash
 ```
 
 ```console
 $ docker-compose run --rm terraform
 root@5e7b9d6614b0:/usr/local/src# terraform -version
-Terraform v1.3.5
+Terraform v1.12.2
 on linux_amd64
 ```
 
@@ -41,5 +45,5 @@ on linux_amd64
 An example of how to use `cibuild` to build and test an image:
 
 ```console
-$ CI=1 TERRAFORM_VERSION=1.3.5 TERRAGRUNT_VERSION=v0.40.0 AWSCLI_VERSION=2.9.0 ./scripts/cibuild
+$ CI=1 TERRAFORM_VERSION=1.12.2 TERRAGRUNT_VERSION=v0.83.2 AWSCLI_VERSION=2.27.5 ./scripts/cibuild
 ```
