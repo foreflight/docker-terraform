@@ -50,7 +50,6 @@ ENV TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
 
 RUN set -ex \
     && deps=" \
-        ca-certificates \
         less \
         git \
         openssh-client \
