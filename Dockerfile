@@ -46,8 +46,6 @@ RUN set -ex \
 
 FROM alpine:${ALPINE_VERSION}
 
-ENV TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
-
 RUN set -ex \
     && deps=" \
         less \
@@ -59,8 +57,7 @@ RUN set -ex \
         groff \
     " \
     && apk add $deps \
-    && rm -rf /var/cache/apk/* \
-    && mkdir -p $TF_PLUGIN_CACHE_DIR
+    && rm -rf /var/cache/apk/*
 
 # Install Terraform.
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
