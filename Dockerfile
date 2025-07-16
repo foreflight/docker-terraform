@@ -46,7 +46,7 @@ RUN set -ex \
 
 FROM alpine:${ALPINE_VERSION}
 
-ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
+ENV TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
 
 RUN set -ex \
     && deps=" \

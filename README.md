@@ -19,7 +19,7 @@ services:
     volumes:
       - .:/workspace
       - ~/.aws:/root/.aws:ro
-      - ~/.terraform.d/plugin-cache:/tmp/terraform
+      - ~/.terraform.d/plugin-cache:/root/.terraform.d/plugin-cache
     environment:
       - AWS_REGION
       - AWS_PROFILE
