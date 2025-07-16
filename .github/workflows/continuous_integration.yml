@@ -18,7 +18,6 @@ jobs:
           - terragrunt_version: "v0.83.2"
           - tflint_version: "v0.58.1"
     env:
-      DOCKER_BUILDKIT: 1
       TERRAFORM_VERSION: ${{ matrix.terraform_version }}
       TERRAGRUNT_VERSION: ${{ matrix.terragrunt_version }}
       TFLINT_VERSION: ${{ matrix.tflint_version }}
