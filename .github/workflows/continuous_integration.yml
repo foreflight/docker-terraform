@@ -32,7 +32,7 @@ jobs:
 
       - name: Execute cipublish
         run: ./scripts/cipublish
-        #if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         env:
           CR_USER: ${{ github.actor }}
           CR_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         terraform_version: ["1.12.2", "1.10.5"]
-    #if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       packages: write
