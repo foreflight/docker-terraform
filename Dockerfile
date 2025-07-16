@@ -58,6 +58,7 @@ RUN set -ex \
         bash \
         aws-cli \
         jq \
+        groff \
     " \
     && apk add $deps \
     && rm -rf /var/cache/apk/* \
