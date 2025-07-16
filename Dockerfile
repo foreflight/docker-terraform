@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=latest
 
 # We install each tool (e.g., Terraform, Terragrunt, and the AWS CLI) in a
 # separate build stage. This design allows us to install each tool in parallel
