@@ -19,15 +19,11 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     if [[ "${1:-}" == "--help" ]]; then
         usage
     else
-        # Although the Dockerfile supports linux/arm64 builds, stick to
-        # linux/amd64 and take things one step at a time.
-        # See https://github.com/foreflight/docker-terraform/issues/6
         docker build \
             --build-arg "ALPINE_VERSION=${ALPINE_VERSION}" \
             --build-arg "TERRAFORM_VERSION=${TERRAFORM_VERSION}" \
             --build-arg "TERRAGRUNT_VERSION=${TERRAGRUNT_VERSION}" \
             --build-arg "TFLINT_VERSION=${TFLINT_VERSION}" \
-            --platform "linux/amd64" \
             --tag "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" .
 
         ./scripts/test
