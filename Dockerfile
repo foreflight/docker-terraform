@@ -1,11 +1,11 @@
-ARG alpine_version=3.22
+ARG ALPINE_VERSION=3.22
 
 # We install each tool (e.g., Terraform, Terragrunt, and the AWS CLI) in a
 # separate build stage. This design allows us to install each tool in parallel
 # while preventing a change to one layer from blowing away the cache of
 # subsequent layers.
 # https://docs.docker.com/build/building/multi-stage/
-FROM alpine:${alpine_version} AS terraform-builder
+FROM alpine:${ALPINE_VERSION} AS terraform-builder
 
 # These args support multi-platform builds if we decide to produce a linux/arm64
 # variant.
@@ -20,7 +20,7 @@ RUN set -ex \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/
 
-FROM alpine:${alpine_version} AS terragrunt-builder
+FROM alpine:${ALPINE_VERSION} AS terragrunt-builder
 
 ARG TERRAGRUNT_VERSION
 ARG TARGETOS
@@ -32,7 +32,7 @@ RUN set -ex \
     && chmod +x terragrunt \
     && mv terragrunt /usr/local/bin/
 
-FROM alpine:${alpine_version} AS tflint-builder
+FROM alpine:${ALPINE_VERSION} AS tflint-builder
 
 ARG TFLINT_VERSION
 ARG TARGETOS
@@ -44,7 +44,7 @@ RUN set -ex \
     && unzip tflint.zip\
     && mv tflint /usr/local/bin/
 
-FROM alpine:${alpine_version}
+FROM alpine:${ALPINE_VERSION}
 
 ARG AWSCLI_VERSION
 ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
