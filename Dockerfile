@@ -41,12 +41,11 @@ ARG TARGETARCH
 RUN set -ex \
     && apk add curl unzip \
     && curl -L "https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_${TARGETOS}_${TARGETARCH}.zip" -o "tflint.zip" \
-    && unzip tflint.zip\
+    && unzip tflint.zip \
     && mv tflint /usr/local/bin/
 
 FROM alpine:${ALPINE_VERSION}
 
-ARG AWSCLI_VERSION
 ENV TF_PLUGIN_CACHE_DIR=/tmp/terraform
 
 RUN set -ex \
@@ -68,7 +67,7 @@ RUN set -ex \
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
 # Install Terragrunt.
 COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
-#Install TFLint
+# Install TFLint.
 COPY --from=tflint-builder /usr/local/bin/tflint /usr/local/bin/tflint
 
 ENTRYPOINT ["/usr/local/bin/terraform"]
