@@ -1,4 +1,4 @@
-name: Build and Publish ForeFlight Terraform image
+name: Build and Publish ForeFlight Terraform Image
 
 on:
   push:
