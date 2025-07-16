@@ -1,9 +1,10 @@
-# docker-terraform [![CI](https://github.com/foreflight/docker-terraform/workflows/CI/badge.svg?branch=master)](https://github.com/foreflight/docker-terraform/actions?query=workflow%3ACI)
+# docker-terraform 
+
+[![Build and Publish ForeFlight Terraform Image](https://github.com/foreflight/docker-terraform/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/foreflight/docker-terraform/actions/workflows/continuous_integration.yml)
 
 This repository contains a templated `Dockerfile` for image variants designed to run deployments using Terraform, Terragrunt, and the AWS CLI.
 
 - [Usage](#usage)
-  - [Authentication with AWS Vault](#authentication-with-aws-vault)
 - [Template Variables](#template-variables)
 - [Testing](#testing)
 
@@ -14,39 +15,26 @@ Via Docker Compose, which includes volumes for basic functionality:
 ```yml
 services:
   terraform:
-    image: ghcr.io/foreflight/terraform:1.3.5
+    image: ghcr.io/foreflight/terraform:1.12.2
     volumes:
-      - ./:/usr/local/src
-      - $HOME/.aws:/root/.aws:ro
+      - .:/workspace
+      - ~/.aws:/root/.aws:ro
+      - ~/.terraform.d/plugin-cache:/root/.terraform.d/plugin-cache
     environment:
+      - AWS_REGION
       - AWS_PROFILE
-    working_dir: /usr/local/src
+      - TF_LOG
+      - TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
+    tty: true
+    working_dir: /workspace
     entrypoint: bash
 ```
 
 ```console
 $ docker-compose run --rm terraform
 root@5e7b9d6614b0:/usr/local/src# terraform -version
-Terraform v1.3.5
+Terraform v1.12.2
 on linux_amd64
-```
-
-### Authentication with AWS Vault
-
-At ForeFlight, we use [AWS Vault](https://github.com/99designs/aws-vault) to log into our numerous AWS accounts via the [`AssumeRole`](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) API.
-
-By default, the AWS CLI looks for credentials [in multiple places](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-precedence), starting with credentials passed as CLI parameters and ending with credentials exposed by the instance metadata server. 
-AWS Vault has a [local implementation](https://github.com/99designs/aws-vault/blob/master/server/ec2server.go) of the [EC2 instance metadata server](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html). So, we can use AWS Vault's local instance metadata server to supply credentials to the AWS CLI without needing to mount or pass anything to the container image:
-
-```console
-$ aws-vault exec --server my-aws-profile
-$ docker-compose run --rm terraform
-root@59531b150efd:/usr/local/src# aws sts get-caller-identity
-{
-    "UserId": "AIDASAMPLEUSERID",
-    "Account": "123456789012",
-    "Arn": "arn:aws:iam::123456789012:user/DevAdmin"
-}
 ```
 
 ### Template Variables
@@ -60,5 +48,5 @@ root@59531b150efd:/usr/local/src# aws sts get-caller-identity
 An example of how to use `cibuild` to build and test an image:
 
 ```console
-$ CI=1 TERRAFORM_VERSION=1.3.5 TERRAGRUNT_VERSION=v0.40.0 AWSCLI_VERSION=2.9.0 ./scripts/cibuild
+$ CI=1 ALPINE_VERSION=3.22 TERRAFORM_VERSION=1.12.2 TERRAGRUNT_VERSION=v0.83.2 TFLINT_VERSION=v0.58.1 ./scripts/cibuild
 ```

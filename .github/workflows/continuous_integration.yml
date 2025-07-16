@@ -1,4 +1,4 @@
-name: CI
+name: Build and Publish ForeFlight Terraform Image
 
 on:
   push:
@@ -13,15 +13,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        terraform_version: ["1.3.4", "1.3.5"]
+        terraform_version: ["1.12.2", "1.10.5"]
         include:
-          - terragrunt_version: "v0.40.0"
-            awscli_version: "2.9.0"
+          - terragrunt_version: "v0.83.2"
+          - tflint_version: "v0.58.1"
+          - alpine_version: "3.22"
     env:
-      DOCKER_BUILDKIT: 1
       TERRAFORM_VERSION: ${{ matrix.terraform_version }}
       TERRAGRUNT_VERSION: ${{ matrix.terragrunt_version }}
-      AWSCLI_VERSION: ${{ matrix.awscli_version }}
+      TFLINT_VERSION: ${{ matrix.tflint_version }}
+      ALPINE_VERSION: ${{ matrix.alpine_version }}
     steps:
       - uses: actions/checkout@v3
 
