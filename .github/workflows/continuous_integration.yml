@@ -15,12 +15,10 @@ jobs:
       matrix:
         terraform_version: ["1.12.2", "1.10.5"]
         include:
-          - terragrunt_version: "v0.83.2"
           - tflint_version: "v0.58.1"
           - alpine_version: "3.22"
     env:
       TERRAFORM_VERSION: ${{ matrix.terraform_version }}
-      TERRAGRUNT_VERSION: ${{ matrix.terragrunt_version }}
       TFLINT_VERSION: ${{ matrix.tflint_version }}
       ALPINE_VERSION: ${{ matrix.alpine_version }}
     steps:

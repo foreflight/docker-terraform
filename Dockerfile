@@ -20,18 +20,6 @@ RUN set -ex \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/
 
-FROM alpine:${ALPINE_VERSION} AS terragrunt-builder
-
-ARG TERRAGRUNT_VERSION
-ARG TARGETOS
-ARG TARGETARCH
-
-RUN set -ex \
-    && apk add curl \
-    && curl -L "https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_${TARGETOS}_${TARGETARCH}" -o "terragrunt" \
-    && chmod +x terragrunt \
-    && mv terragrunt /usr/local/bin/
-
 FROM alpine:${ALPINE_VERSION} AS tflint-builder
 
 ARG TFLINT_VERSION
@@ -61,8 +49,6 @@ RUN set -ex \
 
 # Install Terraform.
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
-# Install Terragrunt.
-COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
 # Install TFLint.
 COPY --from=tflint-builder /usr/local/bin/tflint /usr/local/bin/tflint
 
