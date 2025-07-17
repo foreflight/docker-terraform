@@ -2,10 +2,10 @@
 
 [![Build and Publish ForeFlight Terraform Image](https://github.com/foreflight/docker-terraform/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/foreflight/docker-terraform/actions/workflows/continuous_integration.yml)
 
-This repository contains a templated `Dockerfile` for image variants designed to run deployments using Terraform, Terragrunt, and the AWS CLI.
+This repository contains a `Dockerfile` for image variants designed to run deployments using Terraform, Terragrunt, and the AWS CLI.
 
 - [Usage](#usage)
-- [Template Variables](#template-variables)
+- [Build Arguments](#build-arguments)
 - [Testing](#testing)
 
 ## Usage
@@ -30,15 +30,17 @@ services:
 ```
 
 ```console
-$ docker-compose run --rm terraform
-root@5e7b9d6614b0:/usr/local/src# terraform -version
+$ docker compose run --rm terraform
+fa5dce73516d:/workspace# terraform --version
 Terraform v1.12.2
-on linux_amd64
+on linux_arm64
 ```
 
-### Template Variables
+### Build Arguments
 
+- `ALPINE_VERSION` - [Alpine Linux base image version](https://hub.docker.com/_/alpine/tags).
 - `TERRAFORM_VERSION` - [Terraform version](https://github.com/hashicorp/terraform/releases).
+- `TFLINT_VERSION` - [TFLint version](https://github.com/terraform-linters/tflint/releases).
 
 ### Testing
 
