@@ -1,9 +1,8 @@
 ARG ALPINE_VERSION=latest
 
-# We install each tool (e.g., Terraform, Terragrunt, and the AWS CLI) in a
-# separate build stage. This design allows us to install each tool in parallel
-# while preventing a change to one layer from blowing away the cache of
-# subsequent layers.
+# We install each tool in a separate build stage. This design allows us to
+# install each tool in parallel while preventing a change to one layer from
+# blowing away the cache of subsequent layers.
 # https://docs.docker.com/build/building/multi-stage/
 FROM alpine:${ALPINE_VERSION} AS terraform-builder
 
