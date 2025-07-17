@@ -1,9 +1,8 @@
 ARG ALPINE_VERSION=latest
 
-# We install each tool (e.g., Terraform, Terragrunt, and the AWS CLI) in a
-# separate build stage. This design allows us to install each tool in parallel
-# while preventing a change to one layer from blowing away the cache of
-# subsequent layers.
+# We install each tool in a separate build stage. This design allows us to
+# install each tool in parallel while preventing a change to one layer from
+# blowing away the cache of subsequent layers.
 # https://docs.docker.com/build/building/multi-stage/
 FROM alpine:${ALPINE_VERSION} AS terraform-builder
 
@@ -19,18 +18,6 @@ RUN set -ex \
     && curl "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TARGETOS}_${TARGETARCH}.zip" -o "terraform.zip" \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/
-
-FROM alpine:${ALPINE_VERSION} AS terragrunt-builder
-
-ARG TERRAGRUNT_VERSION
-ARG TARGETOS
-ARG TARGETARCH
-
-RUN set -ex \
-    && apk add curl \
-    && curl -L "https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_${TARGETOS}_${TARGETARCH}" -o "terragrunt" \
-    && chmod +x terragrunt \
-    && mv terragrunt /usr/local/bin/
 
 FROM alpine:${ALPINE_VERSION} AS tflint-builder
 
@@ -61,8 +48,6 @@ RUN set -ex \
 
 # Install Terraform.
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
-# Install Terragrunt.
-COPY --from=terragrunt-builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
 # Install TFLint.
 COPY --from=tflint-builder /usr/local/bin/tflint /usr/local/bin/tflint
 
