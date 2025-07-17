@@ -23,7 +23,6 @@ services:
     environment:
       - AWS_REGION
       - AWS_PROFILE
-      - TF_LOG
       - TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
     tty: true
     working_dir: /workspace
