@@ -22,7 +22,6 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
         docker build \
             --build-arg "ALPINE_VERSION=${ALPINE_VERSION}" \
             --build-arg "TERRAFORM_VERSION=${TERRAFORM_VERSION}" \
-            --build-arg "TERRAGRUNT_VERSION=${TERRAGRUNT_VERSION}" \
             --build-arg "TFLINT_VERSION=${TFLINT_VERSION}" \
             --tag "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" .
 

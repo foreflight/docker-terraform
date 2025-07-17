@@ -2,10 +2,10 @@
 
 [![Build and Publish ForeFlight Terraform Image](https://github.com/foreflight/docker-terraform/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/foreflight/docker-terraform/actions/workflows/continuous_integration.yml)
 
-This repository contains a templated `Dockerfile` for image variants designed to run deployments using Terraform, Terragrunt, and the AWS CLI.
+This repository contains a `Dockerfile` for image variants designed to run deployments using Terraform and the AWS CLI.
 
 - [Usage](#usage)
-- [Template Variables](#template-variables)
+- [Build Arguments](#build-arguments)
 - [Testing](#testing)
 
 ## Usage
@@ -23,7 +23,6 @@ services:
     environment:
       - AWS_REGION
       - AWS_PROFILE
-      - TF_LOG
       - TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
     tty: true
     working_dir: /workspace
@@ -31,22 +30,22 @@ services:
 ```
 
 ```console
-$ docker-compose run --rm terraform
-root@5e7b9d6614b0:/usr/local/src# terraform -version
+$ docker compose run --rm terraform
+fa5dce73516d:/workspace# terraform --version
 Terraform v1.12.2
-on linux_amd64
+on linux_arm64
 ```
 
-### Template Variables
+### Build Arguments
 
+- `ALPINE_VERSION` - [Alpine Linux base image version](https://hub.docker.com/_/alpine/tags).
 - `TERRAFORM_VERSION` - [Terraform version](https://github.com/hashicorp/terraform/releases).
-- `TERRAGRUNT_VERSION` - [Terragrunt version](https://github.com/gruntwork-io/terragrunt/releases).
-- `AWSCLI_VERSION` - [AWS CLI version 2 version](https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst?plain=1).
+- `TFLINT_VERSION` - [TFLint version](https://github.com/terraform-linters/tflint/releases).
 
 ### Testing
 
 An example of how to use `cibuild` to build and test an image:
 
 ```console
-$ CI=1 ALPINE_VERSION=3.22 TERRAFORM_VERSION=1.12.2 TERRAGRUNT_VERSION=v0.83.2 TFLINT_VERSION=v0.58.1 ./scripts/cibuild
+$ CI=1 ALPINE_VERSION=3.22 TERRAFORM_VERSION=1.12.2 TFLINT_VERSION=v0.58.1 ./scripts/cibuild
 ```

@@ -29,13 +29,10 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 
         docker \
             run --rm --entrypoint \
-            terragrunt "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" --version
-
-        docker \
-            run --rm --entrypoint \
             aws "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" --version
 
-        # Running 'aws help' invokes some other features in AWS-CLI which has other dependencies like 'groff'
+        # Running "aws help" invokes some other features in the AWS CLI which
+        # has other dependencies like "groff."
         docker \
             run --rm --entrypoint \
             aws "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" help
