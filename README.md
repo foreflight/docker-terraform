@@ -40,13 +40,11 @@ on linux_amd64
 ### Template Variables
 
 - `TERRAFORM_VERSION` - [Terraform version](https://github.com/hashicorp/terraform/releases).
-- `TERRAGRUNT_VERSION` - [Terragrunt version](https://github.com/gruntwork-io/terragrunt/releases).
-- `AWSCLI_VERSION` - [AWS CLI version 2 version](https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst?plain=1).
 
 ### Testing
 
 An example of how to use `cibuild` to build and test an image:
 
 ```console
-$ CI=1 ALPINE_VERSION=3.22 TERRAFORM_VERSION=1.12.2 TERRAGRUNT_VERSION=v0.83.2 TFLINT_VERSION=v0.58.1 ./scripts/cibuild
+$ CI=1 ALPINE_VERSION=3.22 TERRAFORM_VERSION=1.12.2 TFLINT_VERSION=v0.58.1 ./scripts/cibuild
 ```
