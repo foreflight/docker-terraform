@@ -31,6 +31,13 @@ RUN set -ex \
     && unzip tflint.zip \
     && mv tflint /usr/local/bin/
 
+FROM alpine:${ALPINE_VERSION} AS ssh-host-keys
+
+RUN set -ex \
+    && apk add curl jq \
+    && mkdir /root/.ssh && touch /root/.ssh/known_hosts \
+    && curl https://api.github.com/meta | jq --raw-output '"github.com " + .ssh_keys[]' >>~/.ssh/known_hosts
+
 FROM alpine:${ALPINE_VERSION}
 
 RUN set -ex \
@@ -50,5 +57,7 @@ RUN set -ex \
 COPY --from=terraform-builder /usr/local/bin/terraform /usr/local/bin/terraform
 # Install TFLint.
 COPY --from=tflint-builder /usr/local/bin/tflint /usr/local/bin/tflint
+# Copy SSH host keys file.
+COPY --from=ssh-host-keys /root/.ssh/known_hosts /root/.ssh/known_hosts
 
 ENTRYPOINT ["/usr/local/bin/terraform"]
