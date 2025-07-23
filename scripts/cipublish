@@ -20,8 +20,12 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
         usage
     else
         echo "${CR_PASSWORD}" | docker login -u "${CR_USER}" --password-stdin ghcr.io
-
-        docker \
-            push "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}"
+        ARCH=$(uname -i)
+        
+        # Retag with arch
+        docker tag ghcr.io/foreflight/terraform:${TERRAFORM_VERSION} \
+            ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}-${ARCH}
+        
+        docker push "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}-${ARCH}"
     fi
 fi
