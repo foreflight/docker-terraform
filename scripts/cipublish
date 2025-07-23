@@ -23,8 +23,8 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
         ARCH=$(uname -i)
         
         # Retag with arch
-        docker tag ghcr.io/foreflight/terraform:${TERRAFORM_VERSION} \
-            ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}-${ARCH}
+        docker tag "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}" \
+            "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}-${ARCH}"
         
         docker push "ghcr.io/foreflight/terraform:${TERRAFORM_VERSION}-${ARCH}"
     fi
